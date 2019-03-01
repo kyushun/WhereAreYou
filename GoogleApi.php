@@ -180,9 +180,9 @@ class GoogleApi
         return date('Y-m-d\TH:i:s+09:00', strtotime('00:00:00 +1 day', $date));
     }
 
-    public function saveDomainUsers() {
+    public function updateDomainUsers() {
         $users = $this->getDomainUsersList();
-        file_put_contents(USER_DATA_PATH, json_encode($users, JSON_UNESCAPED_UNICODE));
+        DomainUsers::Save($users);
     }
 
     public function getDomainUsersList() {

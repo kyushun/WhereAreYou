@@ -224,11 +224,15 @@ class DomainUsers
         }
     }
 
-    public static function LoadDomainUsers() {
+    private static function LoadFromFile() {
         $users = file_get_contents(USER_DATA_PATH);
         $users = mb_convert_encoding($users, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
         $users = json_decode($users,true);
+        return $users;
+    }
 
+    public static function LoadDomainUsers() {
+        $users = self::LoadFromFile();
         $blockusers = file_get_contents(BLOCKUSER_DATA_PATH);
         $blockusers = mb_convert_encoding($blockusers, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
         $blockusers = json_decode($blockusers,true);
@@ -241,5 +245,25 @@ class DomainUsers
             }
         }
         return $allowdUsers;
+    }
+
+    public static function Save($newUsers) {
+        $users = [];
+        $currentUsers = self::LoadFromFile();
+
+        foreach ($newUsers as $nu) {
+            $_u = $nu;
+            foreach ($currentUsers as $cu) {
+                if ($nu['name'] === $cu['name']) {
+                    if (array_key_exists('phone', $cu)) {
+                        $_u['phone'] = $cu['phone'];
+                    }
+                    break;
+                }
+            }
+            $users[] = $_u;
+        }
+
+        file_put_contents(USER_DATA_PATH, json_encode($users, JSON_UNESCAPED_UNICODE));
     }
 }

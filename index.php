@@ -7,6 +7,7 @@ define('MAX_QUERIES', 5);
 
 // グローバルに使う変数
 $calendars = array();
+$numbers = array();
 $exceedLimitQueries = false;
 
 
@@ -25,6 +26,7 @@ if (isset($search) && $search !== '') {
             if ($q === '' || CountBytes($q) < 3)  continue;
             if (strpos($user['name'], $q) !== false || strpos($user['email'], $q) !== false) {
                 $calendars[] = $googleApi->getCalendar($user['email']);
+                $numbers[] = $user['phone'];
             }
         }
     }
@@ -61,8 +63,19 @@ function CountBytes($str) {
         font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
     }
     ::-webkit-scrollbar {
-        display: none;
+        width: 10px;
+        height: 10px;
     }
+    ::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+    }
+    ::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .2);
+    border-radius: 10px;
+    box-shadow:0 0 0 1px rgba(255, 255, 255, .3);
+    }
+    
     hr {
         border: 0;
         border-bottom: 1px solid #DFE1E5;
@@ -114,6 +127,15 @@ function CountBytes($str) {
         padding: .5rem 0 0;
         font-size: 1.5rem;
         font-weight: bold;
+    }
+    .phone-numbers {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        overflow-x: auto;
+    }
+    .phone-numbers span {
+        padding: 0 1em 0 .5em;
     }
     .event-content {
         margin-bottom: .75rem;
@@ -192,10 +214,21 @@ function CountBytes($str) {
             </div>
         <?php endif; ?>        
         
-        <?php foreach($calendars as $cal): ?>
+        <?php
+        $i = 0;
+        foreach($calendars as $cal):
+        ?>
             <div class="section-description"><?= $cal->getName() ?></div>
             <div class="card round-card">
                 <div class="card-content">
+                    <?php if ($numbers[$i] != null) : ?>
+                        <div class="phone-numbers">
+                            <?php foreach ($numbers[$i] as $n) : ?>
+                            <i class="small material-icons">contact_phone</i><span><?= $n ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                        <hr class="divide" />
+                    <?php endif;?>
                     <?php
                     $currentEvents = $cal->currentEvents();
                     if (count($currentEvents) > 0) :
@@ -239,7 +272,10 @@ function CountBytes($str) {
                     <?php endif; ?>
                 </div>
             </div>
-        <?php endforeach; ?>
+        <?php
+        $i++;
+        endforeach;
+        ?>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>    
@@ -252,10 +288,15 @@ function CountBytes($str) {
             $('input.autocomplete').autocomplete({
                 data: (function() {
                     var __data = {};
-                        __data = {};
                     for (var i = 0; i < config.users.length; i++) {
-                        __data[config.users[i].name] = null;
-                        __data[config.users[i].email] = null;
+                        if (config.users[i].ignoreAllSearch == null || config.users[i].ignoreAllSearch == false) {
+                            if (config.users[i].ignoreEmailSearch == null || config.users[i].ignoreEmailSearch == false) {
+                                __data[config.users[i].email] = null;
+                            }
+                            if (config.users[i].ignoreNameSearch == null || config.users[i].ignoreNameSearch == false) {
+                                __data[config.users[i].name] = null;
+                            }
+                        }
                     }
                     return __data;
                 })(),
