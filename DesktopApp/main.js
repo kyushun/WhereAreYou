@@ -1,37 +1,30 @@
-const {app, BrowserWindow} = require('electron');
-let win;
+const { app, BrowserWindow } = require('electron');
+let mainWindow = null;
 
-function createWindow () {
-  // ブラウザウィンドウを作成
-  win = new BrowserWindow({width: 400, height: 500, webPreferences: {nodeIntegration: false}});
-  
-  // ウィンドウ最大化
-  // win.setSimpleFullScreen(true)
 
-  // デベロッパーツール自動起動
-  // win.webContents.openDevTools();
+//Electronが初期化
+app.on('ready', () => {
+    // ブラウザウィンドウを作成
+    mainWindow = new BrowserWindow({ width: 400, height: 500, webPreferences: { nodeIntegration: false } });
 
-  //index.htmlをロード
-  win.loadURL('http://localhost:8000');
+    //ページをロード
+    mainWindow.loadURL('http://localhost:8000');
 
-  //ウィンドウが閉じられると発生
-  win.on('closed', () => {
-    win = null
-  });
-
-}
-//Electronが初期化&ブラウザウィンドウを作成する関数を呼ぶ
-app.on('ready', createWindow);
+    //ウィンドウが閉じられると発生
+    mainWindow.on('closed', () => {
+        mainWindow = null
+    });
+});
 
 //ウィンドウが閉じられると終了
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', () => {
-  if (win === null) {
-    createWindow();
-  }
+    if (mainWindow === null) {
+        createWindow();
+    }
 });
