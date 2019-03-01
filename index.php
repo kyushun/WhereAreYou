@@ -156,7 +156,7 @@ function CountBytes($str) {
         <div class="title-header black-text"><a href="/" class="black-text">予定検索</a></div>
 
         <div class="row search-field-wrapper">
-            <form class="col s12 offset-m2 m8 search-field-form" action="" method="GET">
+            <form id="search-field-form" class="col s12 offset-m2 m8 search-field-form" action="" method="GET">
                 <div id="search-field" class="round-card search-field z-depth-1">
                     <div class="input-field search-field-input-query">
                         <i class="material-icons prefix">search</i>
@@ -164,7 +164,7 @@ function CountBytes($str) {
                         <label for="searchword-input">名前 or メールアドレス</label>
                     </div>
                     <div class="input-field search-field-submit-button">
-                        <button class="btn waves-effect waves-light" type="submit">検索</button>
+                        <button id="search-field-form-btn" class="btn waves-effect waves-light" type="submit">検索</button>
                     </div>
                 </div>
             </form>
@@ -249,15 +249,25 @@ function CountBytes($str) {
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('input.autocomplete').autocomplete((function() {
-                var args = {};
-                args.data = {};
-                for (var i = 0; i < config.users.length; i++) {
-                    args.data[config.users[i].name] = null;
-                    args.data[config.users[i].email] = null;
+            $('input.autocomplete').autocomplete({
+                data: (function() {
+                    var __data = {};
+                        __data = {};
+                    for (var i = 0; i < config.users.length; i++) {
+                        __data[config.users[i].name] = null;
+                        __data[config.users[i].email] = null;
+                    }
+                    return __data;
+                })(),
+                onAutocomplete: function() {
+                    $('#search-field-form').submit();
                 }
-                return args;
-            })());
+            });
+
+            $('#search-field-form').submit(function(e) {
+                $('#search-field-form-btn').prop('disabled', true);
+                return true;
+            });
 
             $('#searchword-input').focusin(function(e) {
                 $('#search-field').removeClass('z-depth-1');
