@@ -1,5 +1,6 @@
 const { app, Menu, BrowserWindow } = require('electron');
 const openAboutWindow = require('about-window').default;
+const URL = 'http://localhost:8000';
 let mainWindow = null;
 
 
@@ -45,6 +46,14 @@ app.on('ready', () => {
         {
             label: '表示',
             submenu: [
+                {
+                    label: 'トップページへ移動',
+                    accelerator: 'CmdOrCtrl+T',
+                    click: function(item, focusedWindow) {
+                        if (focusedWindow)
+                            focusedWindow.loadURL(URL);
+                    }
+                },
                 {
                     label: 'ページを再読込み',
                     accelerator: 'CmdOrCtrl+R',
@@ -94,7 +103,7 @@ app.on('ready', () => {
     Menu.setApplicationMenu(menu);
 
     //ページをロード
-    mainWindow.loadURL('http://localhost:8000');
+    mainWindow.loadURL(URL);
 
     //ウィンドウが閉じられると発生
     mainWindow.on('closed', () => {
