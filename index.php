@@ -3,48 +3,49 @@ require_once 'vendor/autoload.php';
 require_once 'GoogleApi.php';
 require_once 'Convert_Event.php';
 
-define('MAX_QUERIES', 5);
+define('MAX_QUERIES', 3);
 
 // グローバルに使う変数
 $calendars = array();
 $numbers = array();
-$exceedLimitQueries = false;
+$exceedQueries = false;
 
 
 $googleApi = new GoogleApi;
-$users = DomainUsers::LoadDomainUsers();
-$search = $_GET['q'];
+$allUsers = DomainUsers::LoadDomainUsers();
+$queryUsers = [];
+$query = isset($_GET['q']) ? $_GET['q'] : null;
 
 // ユーザー検索
-if (isset($search) && $search !== '') {
-    $qs = explode(',', $search);
-    if (count($qs) > MAX_QUERIES) $exceedLimitQueries = true;
-    array_splice($qs, MAX_QUERIES, count($qs) - MAX_QUERIES);
+if (isset($query) && $query !== '') {
+    // 検索クエリを区切り単語で分割
+    $qs = explode(',', $query);
 
-    foreach ($users as $user) {
+    // 複数検索の場合はあいまい検索が1件のみ 
+    $__count = 0;
+    if (count($qs) === 1) {
+        $queryUsers = DomainUsers::searchUsers($qs[0], MAX_QUERIES);
+    } else {
         foreach ($qs as $q) {
-            if ($q === '' || CountBytes($q) < 3)  continue;
-            if (strpos($user['name'], $q) !== false || strpos($user['email'], $q) !== false) {
-                $calendars[] = $googleApi->getCalendar($user['email']);
-                $numbers[] = $user['phone'];
+            if ($__count >= MAX_QUERIES) {
+                $exceedQueries = true;
+                break;
             }
+            $queryUsers = array_merge($queryUsers, DomainUsers::searchUsers($q, 1));
+            $__count++;
         }
     }
-}
 
-function CountBytes($str) {
-    $count = 0;
-    foreach (preg_split("//u", $str, -1, PREG_SPLIT_NO_EMPTY) as $char) {
-        if ($char === ',') continue;
-
-        if (strlen($char) === 1) {
-            $count += 1;
+    foreach ($queryUsers as $qu) {
+        if (isset($qu['ignoreEmailSearch']) && $qu['ignoreEmailSearch'] == true) {
+            $__cal = new Calendar();
+            $__cal->setName($qu['name']);
+            $calendars[] = $__cal;
         } else {
-            $count += 2;
+            $calendars[] = $googleApi->getCalendar($qu['email']);
         }
+        $numbers[] = isset($qu['phone']) ? $qu['phone'] : [];
     }
-
-    return $count;
 }
 ?>
 <!DOCTYPE html>
@@ -182,7 +183,7 @@ function CountBytes($str) {
                 <div id="search-field" class="round-card search-field z-depth-1">
                     <div class="input-field search-field-input-query">
                         <i class="material-icons prefix">search</i>
-                        <input type="text" name="q" id="searchword-input" class="autocomplete" value="<?= $search ?>">
+                        <input type="text" name="q" id="searchword-input" class="autocomplete" value="<?= $query ?>">
                         <label for="searchword-input">名前 or メールアドレス</label>
                     </div>
                     <div class="input-field search-field-submit-button">
@@ -192,25 +193,19 @@ function CountBytes($str) {
             </form>
         </div>
 
-        <?php if (isset($search)): ?>
+        <?php if (isset($query)): ?>
             <div class="row last-updated"><p class="col s12 offset-m2 m8 last-updated"><?= date("Y/m/d H:i:s", time()) ?>更新</p></div>
         <?php endif;?>
 
-        <?php if ( isset($search) && count($calendars) <= 0 && CountBytes($search) >= 3): ?>
+        <?php if (isset($query) && count($calendars) <= 0): ?>
             <div class="card-panel red lighten-1">
                 <p class="white-text">対象ユーザーが見つかりませんでした</p>
             </div>
         <?php endif; ?>
 
-        <?php if ( isset($search) && CountBytes($search) < 3): ?>
+        <?php if ($exceedQueries === true): ?>
             <div class="card-panel red lighten-1">
-                <p class="white-text">検索ワードが短すぎます</p>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($exceedLimitQueries === true): ?>
-            <div class="card-panel red lighten-1">
-                <p class="white-text">一部の検索は省略されました。<br />同時に検索できるのは5人までです</p>
+                <p class="white-text">一部の検索は省略されました<br />同時に検索できるのは<?= MAX_QUERIES ?>人までです</p>
             </div>
         <?php endif; ?>        
         
@@ -281,7 +276,7 @@ function CountBytes($str) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script type="text/javascript">
-        var config = {};config.users = <?= json_encode($users) ?>;
+        var config = {};config.users = <?= json_encode($allUsers) ?>;
     </script>
     <script type="text/javascript">
         $(document).ready(function () {

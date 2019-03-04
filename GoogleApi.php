@@ -6,7 +6,6 @@ define('CREDENTIAL_PATH', dirname(__FILE__).'\OAuth\credentials.json');
 define('SCOPES', implode(' ', array(
     \Google_Service_Calendar::CALENDAR_READONLY,
     \Google_Service_Directory::ADMIN_DIRECTORY_USER_READONLY)));
-define('USER_DATA_PATH', dirname(__FILE__).'\data\users.json');
 
 class GoogleApi
 {

@@ -8,18 +8,22 @@ class Calendar
     private $name;
     private $events;
 
-    public function __construct($resourceId, $events)
+    public function __construct($resourceId = null, $events = null)
     {
-        $this->id = $events->getSummary();
-        $this->name = DomainUsers::getName($resourceId);
+        if ($resourceId != null)
+            $this->name = DomainUsers::getName($resourceId);
         $this->events = array();
-        foreach ($events->getItems() as $event) {
-            $this->events[] = new Event($event);
+        if ($events != null) {
+            $this->id = $events->getSummary();
+            foreach ($events->getItems() as $event) {
+                $this->events[] = new Event($event);
+            }
         }
     }
 
     public function getId() { return $this->id; }
     public function getName() { return $this->name; }
+    public function setName($name) { $this->name = $name; }
 
     public function toHash() {
         $hash = [
@@ -233,18 +237,14 @@ class DomainUsers
 
     public static function LoadDomainUsers() {
         $users = self::LoadFromFile();
-        $blockusers = file_get_contents(BLOCKUSER_DATA_PATH);
-        $blockusers = mb_convert_encoding($blockusers, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
-        $blockusers = json_decode($blockusers,true);
 
-        $allowdUsers = array();
-
-        foreach ($users as $user) {
-            if (!in_array($user['email'], $blockusers)) {
-                $allowdUsers[] = $user;
+        for ($i = 0; $i < count($users); $i++) {
+            if (isset($users[$i]['ignoreAllSearch']) && $users[$i]['ignoreAllSearch'] == true) {
+                array_splice($users, $i, 1);
             }
         }
-        return $allowdUsers;
+
+        return $users;
     }
 
     public static function Save($newUsers) {
@@ -265,5 +265,39 @@ class DomainUsers
         }
 
         file_put_contents(USER_DATA_PATH, json_encode($users, JSON_UNESCAPED_UNICODE));
+    }
+
+    public static function searchUsers($query, $limit = null) {
+        if ($query === '') return [];
+        $__users = [];
+
+        $users = self::LoadDomainUsers();
+        $count = 0;
+        foreach ($users as $u) {
+            // Ignore User
+            if (isset($u['ignoreAllSearch']) && $u['ignoreAllSearch'] == true) continue;
+            // Limit Break
+            if ($limit !== null && $count >= $limit) break; 
+
+            // Searching From Names
+            if (!isset($u['ignoreNameSearch']) || $u['ignoreNameSearch'] != true) {
+                if (isset($u['name']) && $u['name'] !== '' && strpos($u['name'], $query) !== false) {
+                    $__users[] = $u;
+                    $count++;
+                    continue;
+                }
+            }
+
+            // Searching From Emails
+            if (!isset($u['ignoreEmailSearch']) || $u['ignoreEmailSearch'] != true) {
+                if (isset($u['email']) && $u['email'] !== '' && strpos($u['email'], $query) !== false) {
+                    $__users[] = $u;
+                    $count++;
+                    continue;
+                }
+            }
+        }
+
+        return $__users;
     }
 }
