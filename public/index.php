@@ -58,7 +58,8 @@ if (isset($query) && $query !== '') {
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-flash.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <link href="/style/materialize.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
     <style>
     body {
         font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
@@ -171,6 +172,23 @@ if (isset($query) && $query !== '') {
     .divide {
         margin: 1rem 0;
     }
+    .ui-widget.ui-widget-content {
+        border: none !important;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .ui-menu .ui-menu-item-wrapper {
+        padding: 1em;
+    }
+    .ui-state-active {
+        margin: 0 !important;
+        border: none !important;
+        background: #eee !important;
+        color: #000 !important;
+    }
     </style>
 </head>
 
@@ -183,7 +201,7 @@ if (isset($query) && $query !== '') {
                 <div id="search-field" class="round-card search-field z-depth-1">
                     <div class="input-field search-field-input-query">
                         <i class="material-icons prefix">search</i>
-                        <input type="text" name="q" id="searchword-input" class="autocomplete" value="<?= $query ?>">
+                        <input type="text" name="q" id="searchword-input" class="auto-complete" value="<?= $query ?>">
                         <label for="searchword-input">名前 or メールアドレス</label>
                     </div>
                     <div class="input-field search-field-submit-button">
@@ -275,29 +293,44 @@ if (isset($query) && $query !== '') {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="/script/toHebon.js"></script>
     <script type="text/javascript">
         var config = {};config.users = <?= json_encode($allUsers) ?>;
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('input.autocomplete').autocomplete({
-                data: (function() {
-                    var __data = {};
-                    for (var i = 0; i < config.users.length; i++) {
-                        if (config.users[i].ignoreAllSearch == null || config.users[i].ignoreAllSearch == false) {
-                            if (config.users[i].ignoreEmailSearch == null || config.users[i].ignoreEmailSearch == false) {
-                                __data[config.users[i].email] = null;
+            $('input.auto-complete').autocomplete({
+                source : function(request, response) {
+                    var re   = new RegExp(request.term, 'i'),
+                        list = [];
+                            
+                    $.each(config.users, function(i, _user) {
+                        var _name = '', _email = '';
+                        if (_user.ignoreAllSearch == null || _user.ignoreAllSearch == false) {
+                            if (_user.ignoreEmailSearch == null || _user.ignoreEmailSearch == false) {
+                                var furiganaReg = new RegExp(toHebon(request.term), 'i');
+                                if (_user.email.match(re) || _user.email.match(furiganaReg)) {
+                                    list.push(_user.name);
+                                    return true;
+                                }
                             }
                             if (config.users[i].ignoreNameSearch == null || config.users[i].ignoreNameSearch == false) {
-                                __data[config.users[i].name] = null;
+                                if (_user.name.match(re)) {
+                                    list.push(_user.name);
+                                    return true;
+                                }
                             }
                         }
-                    }
-                    return __data;
-                })(),
-                onAutocomplete: function() {
+                    });
+
+                    response(list);
+                },
+                delay: 0
+            }).on( "autocompleteselect", function(event, ui){
+                setTimeout(function() {
                     $('#search-field-form').submit();
-                }
+                }, 0);
             });
 
             $('#search-field-form').submit(function(e) {
