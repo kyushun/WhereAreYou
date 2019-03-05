@@ -8,7 +8,7 @@ let rakumoWindow = null;
 //Electronが初期化
 app.on('ready', () => {
     // ブラウザウィンドウを作成
-    mainWindow = new BrowserWindow({ width: 400, height: 500, webPreferences: { nodeIntegration: false } });
+    mainWindow = new BrowserWindow({ width: 400, height: 550, webPreferences: { nodeIntegration: false } });
     mainWindow.setTitle("いまどこ検索");
 
     const menu = Menu.buildFromTemplate([
