@@ -1,6 +1,6 @@
 <?php
-define('USER_DATA_PATH', realpath('../').'\data\users.json');
-define('BLOCKUSER_DATA_PATH', realpath('../').'\data\blockusers.json');
+define('USER_DATA_PATH', realpath('../').'/data/users.json');
+define('BLOCKUSER_DATA_PATH', realpath('../').'/data/blockusers.json');
 
 class Calendar
 {
