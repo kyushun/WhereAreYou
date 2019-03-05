@@ -235,7 +235,12 @@ if (isset($query) && $query !== '') {
         $i = 0;
         foreach($calendars as $cal):
         ?>
-            <div class="section-description"><?= $cal->getName() ?></div>
+            <div class="section-description">
+                <?= $cal->getName() ?>
+                <?php if ($cal->getId()) : ?>
+                    <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#calendar/'.$cal->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
+                <?php endif; ?>
+            </div>
             <div class="card round-card">
                 <div class="card-content">
                     <?php if ($numbers[$i] != null) : ?>
