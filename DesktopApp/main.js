@@ -8,7 +8,8 @@ let mainWindow = null;
 app.on('ready', () => {
     // ブラウザウィンドウを作成
     mainWindow = new BrowserWindow({ width: 400, height: 500, webPreferences: { nodeIntegration: false } });
-    
+    mainWindow.setTitle("いまどこ検索");
+
     const menu = Menu.buildFromTemplate([
         {
             label: '編集',

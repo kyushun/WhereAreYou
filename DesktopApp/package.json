@@ -10,8 +10,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "about-window": "^1.12.1"
+  },
   "devDependencies": {
-    "about-window": "^1.12.1",
     "electron": "^4.0.6"
   }
 }

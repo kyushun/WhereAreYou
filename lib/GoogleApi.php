@@ -1,8 +1,8 @@
 <?php
 require_once 'Convert_Event.php';
-define('APP_NAME', 'my_app');
-define('SECRET_PATH', dirname(__FILE__).'\OAuth\client_secret.json');
-define('CREDENTIAL_PATH', dirname(__FILE__).'\OAuth\credentials.json');
+define('APP_NAME', 'WhereAreYou');
+define('SECRET_PATH', realpath('../').'\OAuth\client_secret.json');
+define('CREDENTIAL_PATH', realpath('../').'\OAuth\credentials.json');
 define('SCOPES', implode(' ', array(
     \Google_Service_Calendar::CALENDAR_READONLY,
     \Google_Service_Directory::ADMIN_DIRECTORY_USER_READONLY)));

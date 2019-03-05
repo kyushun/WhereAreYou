@@ -1,7 +1,7 @@
 <?php
-require_once 'vendor/autoload.php';
-require_once 'GoogleApi.php';
-require_once 'Convert_Event.php';
+require_once '../vendor/autoload.php';
+require_once '../lib/GoogleApi.php';
+require_once '../lib/Convert_Event.php';
 
 define('MAX_QUERIES', 3);
 
@@ -54,7 +54,7 @@ if (isset($query) && $query !== '') {
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sample</title>
+    <title>いまどこ検索</title>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-flash.min.css" rel="stylesheet">
@@ -83,10 +83,10 @@ if (isset($query) && $query !== '') {
         margin: 0;
     }
     .title-header {
-        margin: 1rem 0;
-        font-size: 2rem;
-        font-weight: bold;
-        text-align: center;
+        display: block;
+        margin: 1rem auto;
+        height: 40px;
+        pointer-events: none;
     }
     .last-updated {
         text-align: right;
@@ -176,7 +176,7 @@ if (isset($query) && $query !== '') {
 
 <body>
     <div class="container">
-        <div class="title-header black-text"><a href="/" class="black-text">予定検索</a></div>
+        <a href="/"><object class="title-header" type="image/svg+xml" data="/logo/logo.svg"></object></a>
 
         <div class="row search-field-wrapper">
             <form id="search-field-form" class="col s12 offset-m2 m8 search-field-form" action="" method="GET">
