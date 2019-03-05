@@ -1,8 +1,9 @@
 const { app, Menu, BrowserWindow } = require('electron');
 const openAboutWindow = require('about-window').default;
-const URL = 'http://localhost:8000';
+const MAIN_URL = 'http://localhost:8000';
+const RAKUMO_URL = 'https://a-rakumo.appspot.com/calendar#';
 let mainWindow = null;
-
+let rakumoWindow = null;
 
 //Electronが初期化
 app.on('ready', () => {
@@ -48,14 +49,6 @@ app.on('ready', () => {
             label: '表示',
             submenu: [
                 {
-                    label: 'トップページへ移動',
-                    accelerator: 'CmdOrCtrl+T',
-                    click: function(item, focusedWindow) {
-                        if (focusedWindow)
-                            focusedWindow.loadURL(URL);
-                    }
-                },
-                {
                     label: 'ページを再読込み',
                     accelerator: 'CmdOrCtrl+R',
                     role: 'reload'
@@ -86,6 +79,34 @@ app.on('ready', () => {
             ],
         },
         {
+            label: 'ページ',
+            submenu: [
+                {
+                    label: 'Rakumoカレンダーを開く',
+                    accelerator: 'CmdOrCtrl+Y',
+                    click: function(item, focusedWindow) {
+                        if (rakumoWindow == null) {
+                            rakumoWindow = new BrowserWindow({ width: 900, height: 600, webPreferences: { nodeIntegration: false } });
+                            rakumoWindow.loadURL(RAKUMO_URL);
+                            rakumoWindow.on('closed', () => {
+                                rakumoWindow = null
+                            });
+                        } else {
+                            rakumoWindow.loadURL(RAKUMO_URL);
+                        }
+                    }
+                },
+                {
+                    label: 'トップページへ移動',
+                    accelerator: 'CmdOrCtrl+T',
+                    click: function(item, focusedWindow) {
+                        if (focusedWindow)
+                            focusedWindow.loadURL(MAIN_URL);
+                    }
+                }
+            ],
+        },
+        {
             label: 'ヘルプ',
             submenu: [
                 {
@@ -104,7 +125,7 @@ app.on('ready', () => {
     Menu.setApplicationMenu(menu);
 
     //ページをロード
-    mainWindow.loadURL(URL);
+    mainWindow.loadURL(MAIN_URL);
 
     //ウィンドウが閉じられると発生
     mainWindow.on('closed', () => {
