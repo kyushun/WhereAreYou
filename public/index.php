@@ -354,7 +354,7 @@ if (isset($query) && $query !== '') {
             $(window).keydown(function(e){
                 if(event.ctrlKey){
                     if(e.keyCode === 70 || e.keyCode === 76){
-                        $('#searchword-input').focus();
+                        $('#searchword-input').focus().select();
                         return false;
                     }
                 }
