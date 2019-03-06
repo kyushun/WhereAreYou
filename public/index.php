@@ -132,10 +132,20 @@ function h($str) {
     .search-field-submit-button {
         margin: 0 0 0 1rem;
     }
-    .section-description {
+    .username-section {
         padding: .5rem 0 0;
         font-size: 1.5rem;
         font-weight: bold;
+    }
+    .card-section+ .card-section {
+        margin-top: 1.5rem;
+    }
+    .descript-section {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    .section-divide {
+        margin: .25rem 0 1rem;
     }
     .phone-numbers {
         display: flex;
@@ -151,15 +161,16 @@ function h($str) {
     }
     .time-frame {
         display: inline-block;
-        margin-right: .25em;
-        padding: .1em .75em;
-        color: #FAFAFA;
-        border-radius: 5px;
-        font-weight: bold;
+        margin-left: .5em;
+        padding: 0 1em;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 4px;
     }
-    .event-summary {
-        padding-left: .5em;
-        font-weight: bold;
+    .event-summary-wrapper {
+        display: flex;
+        align-items: baseline;
+        padding-left: 1em;
     }
     .no-events {
         display: block;
@@ -167,10 +178,10 @@ function h($str) {
         font-weight: normal !important;
     }
     .tag-red {
-        background: #ef5350;
+        background: #e57373;
     }
     .tag-green {
-        background: #4CAF50;
+        background: #81c784 ;
     }
     .rakumo-icons {
         vertical-align: bottom;
@@ -239,7 +250,7 @@ function h($str) {
         $i = 0;
         foreach($calendars as $cal):
         ?>
-            <div class="section-description">
+            <div class="username-section">
                 <?= $cal->getName() ?>
                 <?php if ($cal->getId()) : ?>
                     <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#calendar/'.$cal->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
@@ -248,54 +259,62 @@ function h($str) {
             <div class="card round-card">
                 <div class="card-content">
                     <?php if ($numbers[$i] != null) : ?>
-                        <div class="phone-numbers">
-                            <?php foreach ($numbers[$i] as $n) : ?>
-                            <i class="small material-icons">contact_phone</i><span><?= $n ?></span>
-                            <?php endforeach; ?>
+                        <div class="card-section">
+                            <div class="phone-numbers">
+                                <?php foreach ($numbers[$i] as $n) : ?>
+                                <i class="small material-icons">contact_phone</i><span><?= $n ?></span>
+                                <?php endforeach; ?>
+                            </div>
                         </div>
-                        <hr class="divide" />
                     <?php endif;?>
-                    <?php
-                    $currentEvents = $cal->currentEvents();
-                    if (count($currentEvents) > 0) :
-                            foreach ($currentEvents as $e) :?>
-                            <div class="event-content">
-                                <?php if ($e->getAllDay() === true) : ?>
-                                    <div class="time-frame z-depth-1 tag-red">終日</div>
-                                <?php else: ?>
-                                    <div class="time-frame z-depth-1 tag-red">～<?= date('H:i', $e->getEndTimeAsTime()) ?></div>
-                                <?php endif; ?>
-                                    <div class="event-summary">
-                                        <span class="event-summary"><?= $e->getSummary() ?></span>
-                                        <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
-                                    </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <span class="event-summary no-events">現在の予定はありません</span>
-                    <?php endif; ?>
 
-                    <hr class="divide" />
+                    <div class="card-section">
+                        <div class="descript-section">現在の予定</div>
+                        <hr class="section-divide" />
+                        <?php
+                        $currentEvents = $cal->currentEvents();
+                        if (count($currentEvents) > 0) :
+                                foreach ($currentEvents as $e) :?>
+                                <div class="event-content">
+                                    <?php if ($e->getAllDay() === true) : ?>
+                                        <div class="time-frame tag-red">終日</div>
+                                    <?php else: ?>
+                                        <div class="time-frame tag-red">～<?= date('H:i', $e->getEndTimeAsTime()) ?></div>
+                                    <?php endif; ?>
+                                        <div class="event-summary-wrapper">
+                                            <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
+                                            <span class="event-summary"><?= $e->getSummary() ?></span>
+                                        </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="event-summary no-events">現在の予定はありません</span>
+                        <?php endif; ?>
+                    </div>
 
-                    <?php
-                        $followEvents = $cal->followEvents();
-                        if (count($followEvents) > 0) :
-                            foreach ($followEvents as $e) :?>
-                            <div class="event-content">
-                                <?php if ($e->getAllDay() === true) : ?>
-                                    <div class="time-frame z-depth-1 tag-green">終日</div>
-                                <?php else: ?>
-                                    <div class="time-frame z-depth-1 tag-green"><?= date('H:i', $e->getStartTimeAsTime()) ?>～<?= date('H:i', $e->getEndTimeAsTime()) ?></div>
-                                <?php endif; ?>
-                                    <div class="event-summary">
-                                        <span class="event-summary"><?= $e->getSummary() ?></span>
-                                        <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
-                                    </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <span class="event-summary no-events">今後の予定はありません</span>
-                    <?php endif; ?>
+                    <div class="card-section">
+                        <div class="descript-section">今後の予定</div>
+                        <hr class="section-divide" />
+                        <?php
+                            $followEvents = $cal->followEvents();
+                            if (count($followEvents) > 0) :
+                                foreach ($followEvents as $e) :?>
+                                <div class="event-content">
+                                    <?php if ($e->getAllDay() === true) : ?>
+                                        <div class="time-frame tag-green">終日</div>
+                                    <?php else: ?>
+                                        <div class="time-frame tag-green"><?= date('H:i', $e->getStartTimeAsTime()) ?>～<?= date('H:i', $e->getEndTimeAsTime()) ?></div>
+                                    <?php endif; ?>
+                                        <div class="event-summary-wrapper">
+                                            <a target=”_blank” href="<?= 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() ?>"><i class="material-icons rakumo-icons">event_note</i></a>
+                                            <span class="event-summary"><?= $e->getSummary() ?></span>
+                                        </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <span class="event-summary no-events">今後の予定はありません</span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         <?php
