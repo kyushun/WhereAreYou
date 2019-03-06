@@ -47,6 +47,10 @@ if (isset($query) && $query !== '') {
         $numbers[] = isset($qu['phone']) ? $qu['phone'] : [];
     }
 }
+
+function h($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -205,7 +209,7 @@ if (isset($query) && $query !== '') {
                 <div id="search-field" class="round-card search-field z-depth-1">
                     <div class="input-field search-field-input-query">
                         <i class="material-icons prefix">search</i>
-                        <input type="text" name="q" id="searchword-input" class="auto-complete" value="<?= $query ?>">
+                        <input type="text" name="q" id="searchword-input" class="auto-complete" value="<?= h($query) ?>">
                         <label for="searchword-input">名前 or メールアドレス</label>
                     </div>
                     <div class="input-field search-field-submit-button">
