@@ -341,8 +341,9 @@ function h($str) {
                         var _name = '', _email = '';
                         if (_user.ignoreAllSearch == null || _user.ignoreAllSearch == false) {
                             if (_user.ignoreEmailSearch == null || _user.ignoreEmailSearch == false) {
-                                var furiganaReg = new RegExp(toHebon(request.term), 'i');
-                                if (_user.email.match(re) || _user.email.match(furiganaReg)) {
+                                var emailReg = new RegExp('^.*?' + request.term +'.*?@', 'i');
+                                var furiganaReg = new RegExp('^.*?' + toHebon(request.term) +'.*?@', 'i');
+                                if (_user.email.match(emailReg) || _user.email.match(furiganaReg)) {
                                     list.push(_user.name);
                                     return true;
                                 }
@@ -358,7 +359,7 @@ function h($str) {
 
                     response(list);
                 },
-                delay: 0
+                delay: 200
             }).on( "autocompleteselect", function(event, ui){
                 setTimeout(function() {
                     $('#search-field-form').submit();
