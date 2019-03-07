@@ -68,3 +68,6 @@ data/*
 
 #Releases
 DesktopApp/release
+
+#Cache data
+cache/
