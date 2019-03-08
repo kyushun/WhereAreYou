@@ -11,9 +11,10 @@
         <div class="suggest-content">
             <img src="./img/suggest/1-1.png" />
             <p>
-                ○○さんの内線番号って？<wbr />今どこにいるんだろう…？<br /><br />
-                いまどこ検索なら<wbr /><span class="suggest-01-mphasized">すべてを一度</span>で。<wbr /><br />
-                Rakumoを開くよりも<wbr /><span class="suggest-01-mphasized">高速</span>に。
+                ○○さんの内線番号って？<br />
+                今どこにいるんだろう…？<br /><br />
+                いまどこ検索なら<wbr /><span class="suggest-01-mphasized">すべてを一度</span>に。<wbr /><br />
+                Rakumoを開くよりも<wbr /><span class="suggest-01-mphasized">ずっと高速</span>で。
             </p>
         </div>
     </div>
@@ -26,7 +27,7 @@
             <p>
                 あの人の漢字<wbr />どれだろう・・・<br />
                 斎？斉？齋？齊？<br /><br />
-                ひらがな・<wbr />メールアドレス・<wbr />漢字表記、<wbr /><span class="suggest-02-mphasized">すべて対応</span>。<br />
+                漢字・<wbr />ひらがな・<wbr />メールアドレス、<wbr /><span class="suggest-02-mphasized">多くの検索に対応</span>。<br />
                 電話のような<wbr /><span class="suggest-02-mphasized">急な対応</span>でも<wbr />焦る必要は<wbr />ありません。
             </p>
         </div>
@@ -39,7 +40,7 @@
             <img src="./img/suggest/3-1.png" />
             <p>
                 <i class="material-icons rakumo-icons light-blue-text">event_note</i>←このアイコンを<wbr />クリックすると<wbr />Rakumoで直接その予定が<wbr />見れちゃうんです！<br /><br />
-                参加者や居場所の<wbr />確認に<wbr /><span class="suggest-03-mphasized">手間取りません</span>。<br />
+                参加者や居場所の<wbr />確認が<wbr /><span class="suggest-03-mphasized">すぐにできる</span>。<br />
                 予定の<wbr /><span class="suggest-03-mphasized">変更も可能</span>。
             </p>
         </div>
