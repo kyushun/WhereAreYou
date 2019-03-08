@@ -1,5 +1,6 @@
 body {
     font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
+    min-width: 360px;
 }
 ::-webkit-scrollbar {
     width: 10px;
@@ -39,6 +40,34 @@ hr {
 }
 .round-card {
     border-radius: 10px;
+    overflow: hidden;
+}
+.about-suggest-summary {
+    padding: .5rem 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    vertical-align: bottom;
+    text-align: center;
+    color: #fff;
+    background: #aed581;
+}
+.about-suggest-content {
+    margin: .5rem .5rem 0;
+    color: #333333;
+    white-space: nowrap;
+    font-weight: bold;
+}
+.about-suggest-content img {
+    display: block;
+    margin: 0 auto .5rem;
+    max-width: 100%;
+    max-height: 200px;
+    border: solid 4px #ccc;
+    border-radius: 10px;
+}
+.about-suggest-detail {
+    display: block;
+    text-align: right;
 }
 .search-block {
     margin-bottom: 0;

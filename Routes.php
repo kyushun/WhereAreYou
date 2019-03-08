@@ -1,4 +1,7 @@
 <?php
+use Slim\Http\Request;
+use Slim\Http\Response;
+
 $config = [
     'settings' => [
         'displayErrorDetails' => true, 

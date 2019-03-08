@@ -2,7 +2,9 @@
 @section('title')
 いまどこ検索 - @yield('pagename')
 @endsection
-
+@section('stylesheet')
+@yield('stylesheet1')
+@endsection
 
 @section('content')
     <div class="container">
