@@ -1,5 +1,6 @@
 const { app, Menu, BrowserWindow } = require('electron');
 const openAboutWindow = require('about-window').default;
+const APP_NAME = "いまどこ検索";
 const MAIN_URL = 'http://localhost:8000';
 const RAKUMO_URL = 'https://a-rakumo.appspot.com/calendar#';
 let mainWindow = null;
@@ -9,9 +10,35 @@ let rakumoWindow = null;
 app.on('ready', () => {
     // ブラウザウィンドウを作成
     mainWindow = new BrowserWindow({ width: 400, height: 550, webPreferences: { nodeIntegration: false } });
-    mainWindow.setTitle("いまどこ検索");
+    mainWindow.setTitle(APP_NAME);
 
     const menu = Menu.buildFromTemplate([
+        {
+            label: 'ファイル',
+            submenu: [
+                {
+                    label: APP_NAME + ' について',
+                    click: () =>
+                        openAboutWindow({
+                            product_name: APP_NAME,
+                            icon_path: __dirname + '/assets/icon.png',
+                            copyright: '(c)2019 kyushun',
+                            package_json_dir: __dirname,
+                            adjust_window_size: true
+                        }),
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    label: APP_NAME + ' を終了',
+                    accelerator: 'CmdOrCtrl+Q',
+                    click: function(item, focusedWindow) {
+                        app.quit();
+                    }
+                }
+            ]
+        },
         {
             label: '編集',
             submenu: [
@@ -34,14 +61,6 @@ app.on('ready', () => {
                     label: 'すべて選択',
                     accelerator: 'CmdOrCtrl+A',
                     role: "selectall"
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    label: '閉じる',
-                    accelerator: 'CmdOrCtrl+Q',
-                    role: "close"
                 },
             ],
         },
@@ -79,7 +98,7 @@ app.on('ready', () => {
             ],
         },
         {
-            label: 'ページ',
+            label: 'ウインドウ',
             submenu: [
                 {
                     label: 'Rakumoカレンダーを開く',
@@ -103,24 +122,17 @@ app.on('ready', () => {
                         if (focusedWindow)
                             focusedWindow.loadURL(MAIN_URL);
                     }
+                },
+                {
+                    type: 'separator'
+                },
+                {
+                    label: 'このウインドウを閉じる',
+                    accelerator: 'CmdOrCtrl+W',
+                    role: "close"
                 }
             ],
-        },
-        {
-            label: 'ヘルプ',
-            submenu: [
-                {
-                    label: 'About',
-                    click: () =>
-                        openAboutWindow({
-                            icon_path: __dirname + '/icon.png',
-                            copyright: '(c)2019 kyushun',
-                            package_json_dir: __dirname,
-                            adjust_window_size: true
-                        }),
-                },
-            ],
-        },
+        }
     ]);
     Menu.setApplicationMenu(menu);
 
@@ -135,9 +147,7 @@ app.on('ready', () => {
 
 //ウィンドウが閉じられると終了
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    app.quit();
 });
 
 app.on('activate', () => {
