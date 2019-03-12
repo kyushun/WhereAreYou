@@ -37,15 +37,6 @@ $(document).ready(function () {
         return true;
     });
 
-    $('#searchword-input').focusin(function(e) {
-        $('#search-field').removeClass('z-depth-1');
-        $('#search-field').addClass('z-depth-3');
-    });
-    $('#searchword-input').focusout(function() {
-        $('#search-field').removeClass('z-depth-3');
-        $('#search-field').addClass('z-depth-1');
-    });
-
     $(window).keydown(function(e){
         if(event.ctrlKey){
             if(e.keyCode === 70 || e.keyCode === 76){

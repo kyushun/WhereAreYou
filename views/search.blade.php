@@ -28,7 +28,7 @@
             @endif
         </div>
 
-        <div class="card round-card">
+        <div class="round-card">
             <div class="card-content">
                 @if ($numbers[$i] != null)
                     <div class="card-section">

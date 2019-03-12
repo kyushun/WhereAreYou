@@ -27,21 +27,28 @@ hr {
 }
 .title-header {
     display: block;
-    margin: 1rem auto;
+    margin: 1rem auto .25rem;
     height: 40px;
     pointer-events: none;
 }
 .last-updated {
     text-align: right;
-    margin-bottom: 0;
+    margin: 0;
 }
 .card-panel {
     padding: 8px;
     text-align: center;
 }
 .round-card {
-    border-radius: 10px;
-    overflow: hidden;
+    position: relative;
+    margin: .5rem 0 1rem 0;
+    overflow: hidden;    
+    box-shadow: none;
+    border: solid 1px #e5e5e5;
+    border-radius: 16px;
+}
+.round-card .card-content {
+    padding: 28px 24px;
 }
 .about-suggest-summary {
     padding: .5rem 0;
@@ -85,11 +92,13 @@ hr {
 }
 .search-field {
     display: flex;
+    margin-bottom: .5rem;
     padding: 0 1.5rem;
     align-items: center;
     transition: box-shadow 0.2s ease-in-out;
 }
 .search-field-input-query {
+    margin: .75rem 0;
     flex: 1;
 }
 .search-field-submit-button {
@@ -104,6 +113,7 @@ hr {
     margin-top: 1.5rem;
 }
 .descript-section {
+    color: #606060;
     font-size: 1.25rem;
     font-weight: 700;
 }

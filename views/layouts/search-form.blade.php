@@ -12,11 +12,10 @@
     
         <div class="row search-field-wrapper">
             <form id="search-field-form" class="col s12 offset-m2 m8 search-field-form" action="" method="GET">
-                <div id="search-field" class="round-card search-field z-depth-1">
+                <div id="search-field" class="round-card search-field">
                     <div class="input-field search-field-input-query">
                         <i class="material-icons prefix">search</i>
-                        <input type="text" name="q" id="searchword-input" class="auto-complete" value="@yield('query')">
-                        <label for="searchword-input">名前 or メールアドレス</label>
+                        <input type="text" name="q" id="searchword-input" class="auto-complete" placeholder="名前 or メールアドレス" value="@yield('query')">
                     </div>
                     <div class="input-field search-field-submit-button">
                         <button id="search-field-form-btn" class="btn waves-effect waves-light" type="submit">検索</button>
