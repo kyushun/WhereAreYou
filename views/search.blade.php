@@ -50,7 +50,7 @@
                                 @if ($e->getAllDay() === true)
                                     <div class="time-frame tag-red">終日</div>
                                 @else
-                                    <div class="time-frame tag-red">～{{ date('H:i', $e->getEndTimeAsTime()) }}</div>
+                                    <div class="time-frame tag-red">{{ date('H:i', $e->getStartTimeAsTime()) }}&nbsp;～&nbsp;{{ date('H:i', $e->getEndTimeAsTime()) }}</div>
                                 @endif
                                 <div class="event-summary-wrapper">
                                     <a target=”_blank” href="{{ 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() }}"><i class="material-icons rakumo-icons">event_note</i></a>
@@ -73,7 +73,7 @@
                                 @if ($e->getAllDay() === true)
                                     <div class="time-frame tag-green">終日</div>
                                 @else
-                                <div class="time-frame tag-green">{{ date('H:i', $e->getStartTimeAsTime()) }}～{{ date('H:i', $e->getEndTimeAsTime()) }}</div>
+                                <div class="time-frame tag-green">{{ date('H:i', $e->getStartTimeAsTime()) }}&nbsp;～&nbsp;{{ date('H:i', $e->getEndTimeAsTime()) }}</div>
                                 @endif
                                 <div class="event-summary-wrapper">
                                     <a target=”_blank” href="{{ 'https://a-rakumo.appspot.com/calendar#event/google:'.$cal->getId().'/'.$e->getId() }}"><i class="material-icons rakumo-icons">event_note</i></a>
