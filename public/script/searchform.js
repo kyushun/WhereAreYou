@@ -38,7 +38,7 @@ $(document).ready(function () {
     });
 
     $(window).keydown(function(e){
-        if(event.ctrlKey){
+        if(event.ctrlKey || event.metaKey){
             if(e.keyCode === 70 || e.keyCode === 76){
                 $('#searchword-input').focus().select();
                 return false;
